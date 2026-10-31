@@ -13,6 +13,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+    testOptions {
+        unitTests.all { it.useJUnitPlatform() }
+    }
 }
 dependencies {
     implementation(project(":adk-core"))
@@ -21,6 +24,8 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.serialization.json)
     implementation(libs.coroutines.android)
+    testImplementation(kotlin("test"))
+    testImplementation(libs.coroutines.test)
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.engine)
     testImplementation(libs.robolectric)

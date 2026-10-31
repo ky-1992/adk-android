@@ -12,12 +12,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
+    testOptions {
+        unitTests.all { it.useJUnitPlatform() }
+    }
 }
 dependencies {
     implementation(project(":adk-core"))
     implementation(libs.okhttp)
     implementation(libs.serialization.json)
     implementation(libs.coroutines.android)
+    testImplementation(kotlin("test"))
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.engine)
+    testImplementation(libs.coroutines.test)
 }

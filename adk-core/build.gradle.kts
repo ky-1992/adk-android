@@ -1,0 +1,23 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+}
+android {
+    namespace = "com.google.adk"
+    compileSdk = 35
+    defaultConfig { minSdk = 34 }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = "17" }
+}
+dependencies {
+    implementation(libs.coroutines.android)
+    implementation(libs.serialization.json)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.engine)
+    testImplementation(libs.mockk)
+}

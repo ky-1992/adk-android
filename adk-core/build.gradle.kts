@@ -21,6 +21,7 @@ android {
 dependencies {
     implementation(libs.coroutines.android)
     implementation(libs.serialization.json)
+    testImplementation(kotlin("test"))
     testImplementation(libs.coroutines.test)
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.engine)

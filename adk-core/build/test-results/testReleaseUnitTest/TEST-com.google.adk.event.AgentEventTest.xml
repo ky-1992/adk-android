@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.google.adk.event.AgentEventTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-31T13:49:12.626Z" hostname="DFH-X5-255208" time="0.377">
+  <properties/>
+  <testcase name="RunError should carry throwable and phase()" classname="com.google.adk.event.AgentEventTest" time="0.041"/>
+  <testcase name="TextDelta should carry text and final flag()" classname="com.google.adk.event.AgentEventTest" time="0.283"/>
+  <testcase name="FinalResponse should carry text and token usage()" classname="com.google.adk.event.AgentEventTest" time="0.003"/>
+  <testcase name="RunCompleted should be a singleton data object()" classname="com.google.adk.event.AgentEventTest" time="0.006"/>
+  <testcase name="ToolCallRequest should carry callId toolName and arguments()" classname="com.google.adk.event.AgentEventTest" time="0.004"/>
+  <testcase name="ToolCallResult should carry callId toolName result and optional error()" classname="com.google.adk.event.AgentEventTest" time="0.001"/>
+  <testcase name="RunStarted should carry input token count()" classname="com.google.adk.event.AgentEventTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -20,6 +20,8 @@ sealed class AgentEvent {
     data object RunCompleted : AgentEvent()
 }
 
-data class TokenUsage(val input: Int, val output: Int, val total: Int)
+data class TokenUsage(val input: Int, val output: Int) {
+    val total: Int get() = input + output
+}
 
 enum class ErrorPhase { MODEL_CALL, TOOL_EXECUTION, SESSION_SAVE }

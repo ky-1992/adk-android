@@ -30,4 +30,41 @@ class AgentEventTest {
         assertEquals("boom", event.error.message)
         assertEquals(ErrorPhase.MODEL_CALL, event.phase)
     }
+
+    @Test
+    fun `RunStarted should carry input token count`() {
+        val event = AgentEvent.RunStarted(42)
+        assertEquals(42, event.inputTokenCount)
+    }
+
+    @Test
+    fun `ToolCallResult should carry callId toolName result and optional error`() {
+        val success = AgentEvent.ToolCallResult("call-1", "calc", 42)
+        assertEquals("call-1", success.callId)
+        assertEquals("calc", success.toolName)
+        assertEquals(42, success.result)
+        assertEquals(null, success.error)
+
+        val failure = AgentEvent.ToolCallResult("call-2", "search", null, "timeout")
+        assertEquals(null, failure.result)
+        assertEquals("timeout", failure.error)
+    }
+
+    @Test
+    fun `FinalResponse should carry text and token usage`() {
+        val usage = TokenUsage(input = 100, output = 50)
+        assertEquals(150, usage.total)
+        val event = AgentEvent.FinalResponse("done", usage)
+        assertEquals("done", event.text)
+        assertEquals(100, event.tokenCount.input)
+        assertEquals(50, event.tokenCount.output)
+        assertEquals(150, event.tokenCount.total)
+    }
+
+    @Test
+    fun `RunCompleted should be a singleton data object`() {
+        val event = AgentEvent.RunCompleted
+        assertIs<AgentEvent>(event)
+        assertIs<AgentEvent.RunCompleted>(event)
+    }
 }

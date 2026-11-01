@@ -9,6 +9,9 @@ import com.google.adk.tool.Tool
 import com.google.adk.tools.CalculatorTool
 import com.google.adk.tools.TimeTool
 import com.google.adk.tools.WebSearchTool
+import com.google.adk.tools.WebFetchTool
+import com.google.adk.tools.FileReadTool
+import com.google.adk.tools.FileWriteTool
 
 object DemoAgentOrchestrator {
     private var _sessionStore: SqliteSessionStore? = null
@@ -26,6 +29,9 @@ object DemoAgentOrchestrator {
         TimeTool(),
         CalculatorTool(),
         WebSearchTool(),
+        WebFetchTool(),
+        FileReadTool(),
+        FileWriteTool(),
     )
 
     fun buildAgent(backend: ArkModelBackend): LlmAgent = LlmAgent(

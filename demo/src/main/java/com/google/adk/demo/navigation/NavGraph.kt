@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -19,11 +20,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.adk.demo.ui.chat.ChatScreen
+import com.google.adk.demo.ui.sessions.SessionsScreen
 import com.google.adk.demo.ui.settings.SettingsScreen
 import com.google.adk.demo.ui.tools.ToolsScreen
 
 sealed class Screen(val route: String, val label: String) {
     data object Chat : Screen("chat", "Chat")
+    data object Sessions : Screen("sessions", "Sessions")
     data object Tools : Screen("tools", "Tools")
     data object Settings : Screen("settings", "Settings")
 }
@@ -31,7 +34,7 @@ sealed class Screen(val route: String, val label: String) {
 @Composable
 fun AdkNavHost() {
     val navController = rememberNavController()
-    val screens = listOf(Screen.Chat, Screen.Tools, Screen.Settings)
+    val screens = listOf(Screen.Chat, Screen.Sessions, Screen.Tools, Screen.Settings)
 
     Scaffold(
         bottomBar = {
@@ -43,6 +46,7 @@ fun AdkNavHost() {
                         icon = {
                             when (screen) {
                                 Screen.Chat -> Icon(Icons.AutoMirrored.Filled.Chat, contentDescription = null)
+                                Screen.Sessions -> Icon(Icons.Default.History, contentDescription = null)
                                 Screen.Tools -> Icon(Icons.Default.Build, contentDescription = null)
                                 Screen.Settings -> Icon(Icons.Default.Settings, contentDescription = null)
                             }
@@ -67,6 +71,24 @@ fun AdkNavHost() {
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Screen.Chat.route) { ChatScreen() }
+            composable(Screen.Sessions.route) {
+                SessionsScreen(
+                    onSessionSelected = { sessionId ->
+                        if (sessionId == "new") {
+                            navController.navigate(Screen.Chat.route) {
+                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                launchSingleTop = true
+                            }
+                        } else {
+                            // TODO: load specific session in ChatScreen
+                            navController.navigate(Screen.Chat.route) {
+                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                )
+            }
             composable(Screen.Tools.route) { ToolsScreen() }
             composable(Screen.Settings.route) { SettingsScreen() }
         }

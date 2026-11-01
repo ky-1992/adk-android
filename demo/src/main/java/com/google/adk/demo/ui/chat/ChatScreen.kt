@@ -10,9 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,10 +30,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.adk.demo.DemoAgentOrchestrator
 import com.google.adk.demo.ui.settings.SettingsViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     chatViewModel: ChatViewModel = viewModel(),
     settingsViewModel: SettingsViewModel = viewModel(),
+    onNavigateToSessions: () -> Unit = {},
 ) {
     val state by chatViewModel.state.collectAsStateWithLifecycle()
     val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
@@ -48,66 +57,79 @@ fun ChatScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Error snackbar
-        state.error?.let { error ->
-            Snackbar(
-                modifier = Modifier.padding(8.dp),
-                action = {
-                    TextButton(onClick = { chatViewModel.clearError() }) { Text("Dismiss") }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("ADK Demo") },
+                actions = {
+                    IconButton(onClick = { chatViewModel.newSession() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "New Session")
+                    }
                 },
+            )
+        },
+    ) { scaffoldPadding ->
+        Column(modifier = Modifier.fillMaxSize().padding(scaffoldPadding)) {
+            // Error snackbar
+            state.error?.let { error ->
+                Snackbar(
+                    modifier = Modifier.padding(8.dp),
+                    action = {
+                        TextButton(onClick = { chatViewModel.clearError() }) { Text("Dismiss") }
+                    },
+                ) {
+                    Text(error)
+                }
+            }
+
+            // Messages
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(error)
+                items(state.messages) { item ->
+                    when (item) {
+                        is ChatItem.User -> MessageBubble(text = item.text, isUser = true)
+                        is ChatItem.Assistant -> MessageBubble(text = item.text, isUser = false)
+                        is ChatItem.ToolInvocation -> ToolCallCard(
+                            toolName = item.toolName,
+                            arguments = item.arguments,
+                            result = item.result,
+                            error = item.error,
+                        )
+                    }
+                }
+
+                // Streaming text
+                if (state.streamingText.isNotEmpty()) {
+                    item {
+                        StreamingText(text = state.streamingText)
+                    }
+                }
+
+                // Active tool calls
+                state.toolCalls.values.filter { !it.completed }.forEach { tc ->
+                    item {
+                        ToolCallCard(
+                            toolName = tc.toolName,
+                            arguments = tc.arguments,
+                            result = tc.result,
+                            error = tc.error,
+                        )
+                    }
+                }
+
+                // Extra padding at bottom to avoid overlap with input
+                item { Spacer(modifier = Modifier.padding(bottom = 8.dp)) }
             }
+
+            // Input bar
+            InputBar(
+                enabled = !state.isStreaming,
+                onSend = { text -> chatViewModel.sendMessage(text) },
+            )
         }
-
-        // Messages
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(state.messages) { item ->
-                when (item) {
-                    is ChatItem.User -> MessageBubble(text = item.text, isUser = true)
-                    is ChatItem.Assistant -> MessageBubble(text = item.text, isUser = false)
-                    is ChatItem.ToolInvocation -> ToolCallCard(
-                        toolName = item.toolName,
-                        arguments = item.arguments,
-                        result = item.result,
-                        error = item.error,
-                    )
-                }
-            }
-
-            // Streaming text
-            if (state.streamingText.isNotEmpty()) {
-                item {
-                    StreamingText(text = state.streamingText)
-                }
-            }
-
-            // Active tool calls
-            state.toolCalls.values.filter { !it.completed }.forEach { tc ->
-                item {
-                    ToolCallCard(
-                        toolName = tc.toolName,
-                        arguments = tc.arguments,
-                        result = tc.result,
-                        error = tc.error,
-                    )
-                }
-            }
-
-            // Extra padding at bottom to avoid overlap with input
-            item { Spacer(modifier = Modifier.padding(bottom = 8.dp)) }
-        }
-
-        // Input bar
-        InputBar(
-            enabled = !state.isStreaming,
-            onSend = { text -> chatViewModel.sendMessage(text) },
-        )
     }
 }

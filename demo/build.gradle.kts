@@ -37,5 +37,6 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.coroutines.android)
     implementation(libs.serialization.json)
+    implementation(libs.okhttp)
     androidTestImplementation(libs.compose.ui.test)
 }

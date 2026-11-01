@@ -3,6 +3,7 @@ package com.google.adk.demo.ui.chat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,11 +20,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.adk.demo.DemoAgentOrchestrator
+import com.google.adk.demo.ui.settings.SettingsViewModel
 
 @Composable
-fun ChatScreen(viewModel: ChatViewModel = viewModel()) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+fun ChatScreen(
+    chatViewModel: ChatViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel(),
+) {
+    val state by chatViewModel.state.collectAsStateWithLifecycle()
+    val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
+
+    // Sync configuration from Settings when API key is set
+    LaunchedEffect(settingsState.isConfigured) {
+        if (settingsState.isConfigured) {
+            val backend = settingsViewModel.createBackend()
+            if (backend != null) {
+                chatViewModel.configure(backend, DemoAgentOrchestrator.availableTools())
+            }
+        }
+    }
 
     LaunchedEffect(state.messages.size) {
         if (state.messages.isNotEmpty()) {
@@ -37,7 +54,7 @@ fun ChatScreen(viewModel: ChatViewModel = viewModel()) {
             Snackbar(
                 modifier = Modifier.padding(8.dp),
                 action = {
-                    TextButton(onClick = { viewModel.clearError() }) { Text("Dismiss") }
+                    TextButton(onClick = { chatViewModel.clearError() }) { Text("Dismiss") }
                 },
             ) {
                 Text(error)
@@ -84,13 +101,13 @@ fun ChatScreen(viewModel: ChatViewModel = viewModel()) {
             }
 
             // Extra padding at bottom to avoid overlap with input
-            item { androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(bottom = 8.dp)) }
+            item { Spacer(modifier = Modifier.padding(bottom = 8.dp)) }
         }
 
         // Input bar
         InputBar(
             enabled = !state.isStreaming,
-            onSend = { text -> viewModel.sendMessage(text) },
+            onSend = { text -> chatViewModel.sendMessage(text) },
         )
     }
 }

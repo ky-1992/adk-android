@@ -17,9 +17,19 @@ data class Session(
 )
 
 fun Session.eventsToMessages(): List<ChatMessage> {
+    return eventsToMessages(Int.MAX_VALUE)
+}
+
+fun Session.eventsToMessages(maxEvents: Int): List<ChatMessage> {
     val messages = mutableListOf<ChatMessage>()
     val pendingText = StringBuilder()
-    for (event in events) {
+    // Truncate: keep only the most recent maxEvents events
+    val effectiveEvents = if (events.size > maxEvents) {
+        events.takeLast(maxEvents)
+    } else {
+        events
+    }
+    for (event in effectiveEvents) {
         when (event) {
             is AgentEvent.TextDelta -> {
                 pendingText.append(event.text)

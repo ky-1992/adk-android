@@ -59,7 +59,7 @@ class AgentRunner(
             }
 
             // Build messages
-            val messages = buildMessageList(llmAgent, session, newMessage)
+            val messages = buildMessageList(llmAgent, session, newMessage, runConfig)
 
             // Generate
             val genConfig = GenerationConfig(
@@ -145,6 +145,7 @@ class AgentRunner(
         agent: LlmAgent,
         session: Session,
         newMessage: UserMessage,
+        runConfig: RunConfig,
     ): MutableList<ChatMessage> {
         val msgs = mutableListOf<ChatMessage>()
         // System prompt
@@ -155,7 +156,7 @@ class AgentRunner(
             )
         )
         // History from session events
-        msgs.addAll(session.eventsToMessages())
+        msgs.addAll(session.eventsToMessages(runConfig.maxEvents))
         // New user message
         msgs.add(
             ChatMessage(

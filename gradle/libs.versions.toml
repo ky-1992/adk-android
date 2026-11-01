@@ -13,6 +13,7 @@ activity-compose = "1.9.3"
 junit = "5.11.3"
 mockk = "1.13.13"
 robolectric = "4.14.1"
+security-crypto = "1.0.0"
 
 [libraries]
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -38,6 +39,7 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 androidx-test-ext = { module = "androidx.test.ext:junit", version = "1.2.1" }
 compose-ui-test = { module = "androidx.compose.ui:ui-test-junit4" }
+security-crypto = { module = "androidx.security:security-crypto", version.ref = "security-crypto" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

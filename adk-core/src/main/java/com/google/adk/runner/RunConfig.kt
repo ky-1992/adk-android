@@ -6,6 +6,7 @@ data class RunConfig(
     val streaming: Boolean = true,
     val temperature: Float? = null,
     val topP: Float? = null,
+    val maxEvents: Int = 500,
 )
 
 data class UserMessage(

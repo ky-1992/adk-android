@@ -46,7 +46,7 @@ fun InputBar(enabled: Boolean, onSend: (String) -> Unit) {
             },
             enabled = enabled && text.isNotBlank(),
         ) {
-            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+            Icon(Icons.Default.Send, contentDescription = "Send")
         }
     }
 }

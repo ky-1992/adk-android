@@ -1,9 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
+
+// Secrets (API keys) live in local.properties — gitignored, never in source.
+val localProperties = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+
 android {
     namespace = "com.google.adk.demo"
     compileSdk = 35
@@ -13,23 +22,36 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        buildConfigField(
+            "String",
+            "ARK_API_KEY",
+            "\"${localProperties.getProperty("arkApiKey", "")}\"",
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
-    buildFeatures { compose = true }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+    testOptions {
+        unitTests.all { it.useJUnitPlatform() }
+    }
 }
 dependencies {
     implementation(project(":adk-core"))
     implementation(project(":adk-ark"))
     implementation(project(":adk-session-sqlite"))
     implementation(project(":adk-tools"))
+    implementation(project(":adk-appfunction"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.material3)
+    implementation(libs.compose.material3.window.size)
     implementation(libs.compose.icons)
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.viewmodel.compose)
@@ -42,4 +64,7 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test)
     androidTestImplementation(libs.androidx.test.ext)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }

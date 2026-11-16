@@ -11,6 +11,7 @@ lifecycle = "2.8.7"
 navigation = "2.8.4"
 activity-compose = "1.9.3"
 junit = "5.11.3"
+junit-platform = "1.11.3"
 mockk = "1.13.13"
 robolectric = "4.14.1"
 security-crypto = "1.0.0"
@@ -32,9 +33,11 @@ compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-
 compose-ui = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material3-window-size = { module = "androidx.compose.material3:material3-window-size-class" }
 compose-icons = { module = "androidx.compose.material:material-icons-extended" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 androidx-test-ext = { module = "androidx.test.ext:junit", version = "1.2.1" }

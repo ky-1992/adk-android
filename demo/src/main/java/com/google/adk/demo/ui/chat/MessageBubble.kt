@@ -13,10 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MessageBubble(text: String, isUser: Boolean) {
+fun MessageBubble(text: String, isUser: Boolean, maxWidth: Dp = 300.dp) {
     val bgColor = if (isUser)
         MaterialTheme.colorScheme.primaryContainer
     else
@@ -28,7 +29,7 @@ fun MessageBubble(text: String, isUser: Boolean) {
     ) {
         Box(
             modifier = Modifier
-                .widthIn(max = 300.dp)
+                .widthIn(max = maxWidth)
                 .clip(RoundedCornerShape(12.dp))
                 .background(bgColor)
                 .padding(12.dp),

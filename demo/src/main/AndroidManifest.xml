@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Voice input: SpeechRecognizer needs microphone access at runtime. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
         android:name=".AdkDemoApp"
         android:label="ADK Demo"

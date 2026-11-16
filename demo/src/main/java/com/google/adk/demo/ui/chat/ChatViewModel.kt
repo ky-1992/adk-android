@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.adk.agent.LlmAgent
+import com.google.adk.demo.DemoAgentOrchestrator
 import com.google.adk.demo.di.AppModule
 import com.google.adk.event.AgentEvent
 import com.google.adk.model.ModelBackend
@@ -84,7 +85,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     name = "demo-agent",
                     description = "ADK Demo Agent",
                     model = backend,
-                    instruction = "You are a helpful AI assistant. Use tools when appropriate.",
+                    // Shared demo instruction (HTML-fragment replies) — same
+                    // constant used by DemoAgentOrchestrator.buildAgent.
+                    instruction = DemoAgentOrchestrator.INSTRUCTION,
                     tools = this@ChatViewModel.tools,
                 )
 

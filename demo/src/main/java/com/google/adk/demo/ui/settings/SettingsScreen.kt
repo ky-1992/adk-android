@@ -1,5 +1,6 @@
 package com.google.adk.demo.ui.settings
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,13 +19,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
+// Activity-scoped so ChatScreen shares this same instance (see ChatScreen).
+fun SettingsScreen(
+    viewModel: SettingsViewModel = viewModel(
+        viewModelStoreOwner = LocalContext.current as ComponentActivity,
+    ),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     Column(

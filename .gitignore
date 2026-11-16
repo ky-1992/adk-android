@@ -23,5 +23,7 @@ out/
 .DS_Store
 Thumbs.db
 *.keystore
+# Accidental nested wrapper copy (legit one is gradle/wrapper/, keep tracked)
+gradle/gradle/
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
